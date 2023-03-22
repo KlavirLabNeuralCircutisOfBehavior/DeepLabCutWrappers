@@ -6,7 +6,6 @@ import sys
 
 config_path = sys.argv[1]
 video_paths_smb = sys.argv[2]
-video_tmp_save_path = sys.argv[3]
 conn = SMBConnection('LabRead',
                      'KlavirReadLab20@#',
                      '132.74.242.29',
@@ -23,7 +22,7 @@ for file in files:
                              'WORKGROUP',
                              use_ntlm_v2=True)
         assert conn.connect('132.74.242.29', port=445)
-        tmp_video_path = [os.path.join(video_tmp_save_path, file.filename)]
+        tmp_video_path = [file.filename]
         with open(tmp_video_path[0], 'wb') as video_file:
             conn.retrieveFile("Public", video_paths_smb + "/" + file.filename, video_file, timeout=60 * 60,
                               show_progress=True)
