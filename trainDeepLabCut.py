@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import zipfile
 import deeplabcut
 from smb.SMBConnection import SMBConnection
@@ -18,8 +19,10 @@ with open(project_zip_file_name, 'wb') as zip_file:
     conn.retrieveFile(project_smb_service_name, project_smb_path + "/" + project_zip_file_name, zip_file,
                       timeout=60 * 60,
                       show_progress=True)
+time.sleep(5)
 with zipfile.ZipFile(project_zip_file_name, "r") as zip_ref:
     zip_ref.extractall(server_prefix+"/")
+time.sleep(5)
 config_path = server_prefix + project_zip_file_name.split(".zip")[0] + "/config.yaml"
 deeplabcut.create_training_dataset(
     config_path,
