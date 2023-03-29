@@ -21,9 +21,10 @@ with open(project_zip_file_name, 'wb') as zip_file:
                       show_progress=True)
 time.sleep(5)
 with zipfile.ZipFile(project_zip_file_name, "r") as zip_ref:
-    zip_ref.extractall(server_prefix+"/")
+    zip_ref.extractall(server_prefix + "/")
 time.sleep(5)
-config_path = server_prefix + project_zip_file_name.split(".zip")[0] + "/config.yaml"
+config_path = server_prefix + "/" + project_zip_file_name.split(".zip")[0] + "/config.yaml"
+print(config_path)
 deeplabcut.create_training_dataset(
     config_path,
     num_shuffles=3,
