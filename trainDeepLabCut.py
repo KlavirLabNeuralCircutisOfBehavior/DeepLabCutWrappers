@@ -19,7 +19,7 @@ with open(project_zip_file_name, 'wb') as zip_file:
                       timeout=60 * 60,
                       show_progress=True)
 with zipfile.ZipFile(project_zip_file_name, "r") as zip_ref:
-    zip_ref.extractall()
+    zip_ref.extractall(server_prefix+"/")
 config_path = server_prefix + project_zip_file_name.split(".zip")[0] + "/config.yaml"
 deeplabcut.create_training_dataset(
     config_path,
