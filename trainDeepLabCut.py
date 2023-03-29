@@ -7,6 +7,7 @@ from smb.SMBConnection import SMBConnection
 project_smb_path = sys.argv[1]
 project_smb_service_name = sys.argv[2]
 project_zip_file_name = sys.argv[3]
+server_prefix = sys.argv[4]
 conn = SMBConnection('LabRead',
                      'KlavirReadLab20@#',
                      '132.74.242.29',
@@ -19,7 +20,7 @@ with open(project_zip_file_name, 'wb') as zip_file:
                       show_progress=True)
 with zipfile.ZipFile(project_zip_file_name, "r") as zip_ref:
     zip_ref.extractall()
-config_path = "/tzuk/" +project_zip_file_name.split(".zip")[0] + "/config.yaml"
+config_path = server_prefix + project_zip_file_name.split(".zip")[0] + "/config.yaml"
 deeplabcut.create_training_dataset(
     config_path,
     num_shuffles=3,
