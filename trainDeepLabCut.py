@@ -19,7 +19,7 @@ with open(project_zip_file_name, 'wb') as zip_file:
                       show_progress=True)
 with zipfile.ZipFile(project_zip_file_name, "r") as zip_ref:
     zip_ref.extractall()
-config_path = project_zip_file_name.split(".zip")[0] + "/config.yaml"
+config_path = "/tzuk/" +project_zip_file_name.split(".zip")[0] + "/config.yaml"
 deeplabcut.create_training_dataset(
     config_path,
     num_shuffles=3,
