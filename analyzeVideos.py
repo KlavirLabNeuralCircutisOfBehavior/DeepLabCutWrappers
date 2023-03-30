@@ -52,6 +52,7 @@ for file in files:
             keypoints_only=False,
             destfolder=video_tmp_analysis_save_path
         )
+        os.remove(tmp_video_path[0])
         for basedir, dirs, files in os.walk(video_tmp_analysis_save_path):
             conn = SMBConnection('LabRead',
                                  'KlavirReadLab20@#',
