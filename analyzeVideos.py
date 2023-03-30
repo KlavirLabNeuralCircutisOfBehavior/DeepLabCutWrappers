@@ -7,10 +7,9 @@ import sys
 config_path = sys.argv[1]
 video_paths_smb = sys.argv[2]
 video_tmp_save_path = sys.argv[3]
-video_tmp_analysis_save_path = sys.argv[4]
-results_paths_smb = sys.argv[5]
-service_name_video_path = sys.argv[6]
-service_name_result_path = sys.argv[7]
+results_paths_smb = sys.argv[4]
+service_name_video_path = sys.argv[5]
+service_name_result_path = sys.argv[6]
 conn = SMBConnection('LabRead',
                      'KlavirReadLab20@#',
                      '132.74.242.29',
@@ -41,19 +40,17 @@ for file in files:
             dynamic=(True, 5, 50),
             auto_track=True,
             calibrate=True,
-            save_as_csv=True,
-            destfolder=video_tmp_analysis_save_path
+            save_as_csv=True
         )
         print("Done analyze")
 
         deeplabcut.create_labeled_video(
             config_path,
             tmp_video_path,
-            keypoints_only=False,
-            destfolder=video_tmp_analysis_save_path
+            keypoints_only=False
         )
         # os.remove(tmp_video_path[0])
-        for basedir, dirs, files in os.walk(video_tmp_analysis_save_path):
+        for basedir, dirs, files in os.walk(tmp_video_path[0]):
             conn = SMBConnection('LabRead',
                                  'KlavirReadLab20@#',
                                  '132.74.242.29',
@@ -61,9 +58,11 @@ for file in files:
                                  use_ntlm_v2=True)
             assert conn.connect('132.74.242.29', port=445)
             for result_file in files:
-                with open(os.path.join(basedir, result_file), "rb") as f:
-                    print("send " + result_file + " to " + results_paths_smb)
-                    conn.storeFile(service_name_result_path, results_paths_smb + "/" + result_file, f, timeout=60 * 60,
-                                   show_progress=True)
+                if ".csv" in result_file or ".h5" in result_file or "labeled.mp4" in result_file:
+                    with open(os.path.join(basedir, result_file), "rb") as f:
+                        print("send " + result_file + " to " + results_paths_smb)
+                        conn.storeFile(service_name_result_path, results_paths_smb + "/" + result_file, f,
+                                       timeout=60 * 60,
+                                       show_progress=True)
                 # os.remove(os.path.join(basedir, result_file))
 print("done!")
