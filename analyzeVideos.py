@@ -19,7 +19,6 @@ conn = SMBConnection('LabRead',
 assert conn.connect('132.74.242.29', port=445)
 # list the files on each share
 files = conn.listPath(service_name_video_path, video_paths_smb, timeout=30)
-print(files)
 for file in files:
     if "." != file.filename and ".." != file.filename:
         conn = SMBConnection('LabRead',
