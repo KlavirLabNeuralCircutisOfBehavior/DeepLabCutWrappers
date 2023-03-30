@@ -17,7 +17,7 @@ conn = SMBConnection('LabRead',
                      use_ntlm_v2=True)
 assert conn.connect('132.74.242.29', port=445)
 # list the files on each share
-files = conn.listPath('deepLabCutFiles', video_paths_smb, timeout=30)
+files = conn.listPath(service_name_video_path, video_paths_smb, timeout=30)
 for file in files:
     if "." != file.filename and ".." != file.filename:
         conn = SMBConnection('LabRead',
