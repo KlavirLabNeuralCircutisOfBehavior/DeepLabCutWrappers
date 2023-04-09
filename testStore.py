@@ -2,8 +2,7 @@ import sys
 from smb.SMBConnection import SMBConnection
 import os
 
-tmp_video_path = ["~/video_tmp_analysis_save_path"]
-print(tmp_video_path)
+tmp_video_path = ["../tmp_deeplabcut_videos"]
 for basedir, dirs, files in os.walk(tmp_video_path[0]):
     conn = SMBConnection('LabRead',
                          'KlavirReadLab20@#',
