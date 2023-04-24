@@ -35,7 +35,7 @@ for file in files:
                               show_progress=True)
         print("done downloading" + file.filename)
         conn.close()
-        deeplabcut.video_inference_superanimal(tmp_video_path, superanimal_name, scale_list=scale_list)
+        deeplabcut.video_inference_superanimal(tmp_video_path, superanimal_name, scale_list=scale_list,videotype=".mpg")
 
 for basedir, dirs, files in os.walk(video_tmp_save_path):
     if len(files) > 0:
