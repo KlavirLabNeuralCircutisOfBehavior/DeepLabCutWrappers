@@ -22,11 +22,11 @@ with open(project_zip_file_name, 'wb') as zip_file:
 time.sleep(5)
 with zipfile.ZipFile(project_zip_file_name, "r") as zip_ref:
     print(project_zip_file_name.split(".zip")[0])
-    if len(zip_ref.infolist()) != 1:
-        os.mkdir(server_prefix+"/"+ project_zip_file_name.split(".zip")[0])
-        zip_ref.extractall(server_prefix + "/"+ project_zip_file_name.split(".zip")[0])
-    else:
-        zip_ref.extractall(server_prefix + "/")
+    # if len(zip_ref.infolist()) != 1:
+    #     #os.mkdir(server_prefix+"/"+ project_zip_file_name.split(".zip")[0])
+    #     zip_ref.extractall(server_prefix + "/"+ project_zip_file_name.split(".zip")[0])
+    # else:
+    zip_ref.extractall(server_prefix + "/")
 
 time.sleep(5)
 config_path = server_prefix + "/" + project_zip_file_name.split(".zip")[0] + "/config.yaml"
