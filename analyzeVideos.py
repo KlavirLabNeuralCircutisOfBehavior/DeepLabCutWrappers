@@ -5,6 +5,8 @@ from smb.SMBConnection import SMBConnection
 import sys
 
 config_path = sys.argv[1]
+if ".yaml" not in config_path:
+    config_path += "/config.yaml"
 video_paths_smb = sys.argv[2]
 video_tmp_save_path = sys.argv[3]
 results_paths_smb = sys.argv[4]
@@ -67,5 +69,5 @@ for basedir, dirs, files in os.walk(video_tmp_save_path):
                     conn.storeFile(service_name_result_path, results_paths_smb + "/" + result_file, f,
                                    timeout=60 * 60,
                                    show_progress=True)
-            os.remove(os.path.join(basedir,result_file))
+            os.remove(os.path.join(basedir, result_file))
 print("done!")
