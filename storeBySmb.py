@@ -4,10 +4,10 @@ from smb.SMBConnection import SMBConnection
 import os
 
 
-def storeFile(smb_connection, file, path, service_name):
-    with open(file, "rb") as f:
-        print("send " + file + " to " + path)
-        smb_connection.storeFile(service_name, path + "/" + file, f,
+def storeFile(smb_connection, file_full_path,file_name, path, service_name):
+    with open(file_full_path, "rb") as f:
+        print("send " + file_full_path + " to " + path)
+        smb_connection.storeFile(service_name, path + "/" + file_name, f,
                                  timeout=60 * 60,
                                  show_progress=True)
 
@@ -26,10 +26,10 @@ def store(files_location, service_name, path_to_store, filters=[], delete=False)
             if filters is not None and len(filters) > 0:
                 for fil in filters:
                     if fil in result_file:
-                        storeFile(conn, os.path.join(basedir, result_file), path_to_store, service_name)
+                        storeFile(conn, os.path.join(basedir, result_file),result_file, path_to_store, service_name)
                         break
             else:
-                storeFile(conn, os.path.join(basedir, result_file), path_to_store, service_name)
+                storeFile(conn, os.path.join(basedir, result_file),result_file, path_to_store, service_name)
             if delete:
                 os.remove(os.path.join(basedir, result_file))
 
