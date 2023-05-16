@@ -44,7 +44,7 @@ if __name__ == "__main__":
         default=[".csv", ".h5", ".mp4"],  # default if nothing is provided
     )
     CLI.add_argument("--files_location", type=str, default='.')
-    CLI.add_argument("--service_name", type=str, default='deeplabcut')
+    CLI.add_argument("--service_name", type=str, default='deeplabcutfiles')
     CLI.add_argument("--path_to_store", type=str, default='/')
     CLI.add_argument("--delete", type=bool, default=False)
     args = CLI.parse_args()
