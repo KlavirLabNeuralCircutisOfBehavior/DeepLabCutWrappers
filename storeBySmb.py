@@ -12,7 +12,7 @@ def storeFile(smb_connection, file, path, service_name):
                                  show_progress=True)
 
 
-def store(files_location: str, service_name: str, path_to_store, filters: list[str], delete=False):
+def store(files_location, service_name, path_to_store, filters=[], delete=False):
     if filters is None:
         filters = []
     for basedir, dirs, files in os.walk(files_location):
