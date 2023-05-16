@@ -1,3 +1,5 @@
+import argparse
+
 from smb.SMBConnection import SMBConnection
 import os
 
@@ -31,3 +33,19 @@ def store(files_location: str, service_name: str, path_to_store, filters: list[s
                     storeFile(conn, os.path.join(basedir, result_file), path_to_store, service_name)
             if delete:
                 os.remove(os.path.join(basedir, result_file))
+
+
+if __name__ == "__main__":
+    CLI = argparse.ArgumentParser()
+    CLI.add_argument(
+        "--filters",  # name on the CLI - drop the `--` for positional/required parameters
+        nargs="*",  # 0 or more values expected => creates a list
+        type=str,
+        default=[".csv", ".h5", ".mp4"],  # default if nothing is provided
+    )
+    CLI.add_argument("--files_location", type=str, default='.')
+    CLI.add_argument("--service_name", type=str, default='deeplabcut')
+    CLI.add_argument("--path_to_store", type=str, default='/')
+    CLI.add_argument("--delete", type=bool, default=False)
+    args = CLI.parse_args()
+    store(args.files_location, args.service_name, args.path_to_store, args.filters, args.delete)
