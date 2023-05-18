@@ -47,5 +47,4 @@ if __name__ == "__main__":
     CLI.add_argument("--path_to_store", type=str, default='/')
     CLI.add_argument("--delete", type=bool, default=False)
     args = CLI.parse_args()
-    print(args.filters)
     store(args.files_location, args.service_name, args.path_to_store, args.filters, args.delete)
