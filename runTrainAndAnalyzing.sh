@@ -23,9 +23,10 @@ userName="${USER}"
 git clone https://github.com/KlavirLabNeuralCircutisOfBehavior/DeepLabCutWrappers.git
 cp /users/klavir/shared/pytorch:21.04-py3.sqsh "${containerName}"
 IFS=. read -r file_name zip <<< "${config_file_name}"
-srun --container-image="${containerName}" --container-mounts="${HOME}:/${userName}" python3 "/${userName}/DeepLabCutWrappers/trainDeepLabCut.py" "${config_path}" "${service_name_result_path}" "${config_file_name}" "/${userName}"
+srun --container-image="${containerName}" --container-mounts="${HOME}:/${userName}" python3 "/${userName}/DeepLabCutWrappers/trainDeepLabCut.py" "${config_path}" "${service_name_config}" "${config_file_name}" "/${userName}"
 mkdir "video_tmp_save_path${current_date}"
-srun --gpus=1 --container-image="${containerName}" --container-mounts="${HOME}:/${userName}" python3 "/${userName}/DeepLabCutWrappers/analyzeVideos.py" "/${userName}/${file_name}/config.yaml" "${video_paths_smb}" "/$USER/video_tmp_save_path${current_date}" "${results_paths_smb}" "${service_name_video_path}" "${service_name_result_path}"
+srun --gpus=1 --container-image="${containerName}" --container-mounts="${HOME}:/${userName}" python3 "/${userName}/DeepLabCutWrappers/analyzeVideos.py" "/${userName}/${file_name}/config.yaml" "${video_paths_smb}" "/${userName}/video_tmp_save_path${current_date}" "${results_paths_smb}" "${service_name_video_path}" "${service_name_result_path}"
 rm "${containerName}"
+rm -rf "video_tmp_save_path${current_date}"
 
 # how to run: sbatch ../shared/TrainAndAnalyze.sh groomingL2-roni-2023-05-15.zip /roni/ homes /shahaf/pain_and_grooming_batch2/Videos/post_surgery/glass/L2/ /tzuk/test/ PUBLIC deeplabcutfiles
