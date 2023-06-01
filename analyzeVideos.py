@@ -5,53 +5,54 @@ from smb.SMBConnection import SMBConnection
 import sys
 from storeBySmb import store
 
-config_path = sys.argv[1]
-if ".yaml" not in config_path:
-    config_path += "/config.yaml"
-video_paths_smb = sys.argv[2]
-video_tmp_save_path = sys.argv[3]
-results_paths_smb = sys.argv[4]
-service_name_video_path = sys.argv[5]
-service_name_result_path = sys.argv[6]
-conn = SMBConnection('LabRead',
-                     'KlavirReadLab20@#',
-                     '132.74.242.29',
-                     'WORKGROUP',
-                     use_ntlm_v2=True)
-assert conn.connect('132.74.242.29', port=445)
-# list the files on each share
-files = conn.listPath(service_name_video_path, video_paths_smb, timeout=30)
-for file in files:
-    if "." != file.filename and ".." != file.filename:
-        conn = SMBConnection('LabRead',
-                             'KlavirReadLab20@#',
-                             '132.74.242.29',
-                             'WORKGROUP',
-                             use_ntlm_v2=True)
-        assert conn.connect('132.74.242.29', port=445)
-        tmp_video_path = [os.path.join(video_tmp_save_path, file.filename)]
-        with open(tmp_video_path[0], 'wb') as video_file:
-            conn.retrieveFile(service_name_video_path, video_paths_smb + "/" + file.filename, video_file,
-                              timeout=60 * 60,
-                              show_progress=True)
-        print("done downloading" + file.filename)
-        conn.close()
-        deeplabcut.analyze_videos(
-            config_path,
-            tmp_video_path,
-            allow_growth=True,
-            dynamic=(True, 5, 50),
-            auto_track=True,
-            calibrate=True,
-            save_as_csv=True
-        )
-        print("Done analyze")
 
-        deeplabcut.create_labeled_video(
-            config_path,
-            tmp_video_path,
-            keypoints_only=False
-        )
-print("sending results to smb server")
-store(video_tmp_save_path, service_name_result_path, results_paths_smb, [".csv", ".h5", "labeled.mp4"], True)
-print("done!")
+def analyze(config_path, video_paths_smb, video_tmp_save_path, results_paths_smb, service_name_video_path,
+            service_name_result_path):
+    if ".yaml" not in config_path:
+        config_path += "/config.yaml"
+    conn = SMBConnection('LabRead',
+                         'KlavirReadLab20@#',
+                         '132.74.242.29',
+                         'WORKGROUP',
+                         use_ntlm_v2=True)
+    assert conn.connect('132.74.242.29', port=445)
+    # list the files on each share
+    files = conn.listPath(service_name_video_path, video_paths_smb, timeout=30)
+    for file in files:
+        if "." != file.filename and ".." != file.filename:
+            conn = SMBConnection('LabRead',
+                                 'KlavirReadLab20@#',
+                                 '132.74.242.29',
+                                 'WORKGROUP',
+                                 use_ntlm_v2=True)
+            assert conn.connect('132.74.242.29', port=445)
+            tmp_video_path = [os.path.join(video_tmp_save_path, file.filename)]
+            with open(tmp_video_path[0], 'wb') as video_file:
+                conn.retrieveFile(service_name_video_path, video_paths_smb + "/" + file.filename, video_file,
+                                  timeout=60 * 60,
+                                  show_progress=True)
+            print("done downloading" + file.filename)
+            conn.close()
+            deeplabcut.analyze_videos(
+                config_path,
+                tmp_video_path,
+                allow_growth=True,
+                dynamic=(True, 5, 50),
+                auto_track=True,
+                calibrate=True,
+                save_as_csv=True
+            )
+            print("Done analyze")
+
+            deeplabcut.create_labeled_video(
+                config_path,
+                tmp_video_path,
+                keypoints_only=False
+            )
+    print("sending results to smb server")
+    store(video_tmp_save_path, service_name_result_path, results_paths_smb, [".csv", ".h5", "labeled.mp4"], True)
+    print("done!")
+
+
+if __name__ == "__main__":
+    analyze(*sys.argv[1:])
