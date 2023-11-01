@@ -1,11 +1,13 @@
 import argparse
 
+import smb.smb_structs
 from smb.SMBConnection import SMBConnection
 import os
 
 
 def storeFile(smb_connection, file_full_path, file_name, path, service_name):
     with open(file_full_path, "rb") as f:
+        path = path.replace('\\','/')
         print("send " + file_full_path + " to " + path)
         smb_connection.storeFile(service_name, path + "/" + file_name, f,
                                  timeout=60 * 60,
@@ -18,18 +20,23 @@ def storeDirectory(local_path, remote_path, service_name):
                          '132.74.242.29',
                          'WORKGROUP',
                          use_ntlm_v2=True)
+    assert conn.connect('132.74.242.29', port=445)
     for item in os.listdir(local_path):
         local_item_path = os.path.join(local_path, item)
-        remote_item_path = os.path.join(remote_path, item)
 
         if os.path.isdir(local_item_path):
+            remote_item_path = os.path.join(remote_path, item)
             # Recursively copy subdirectories
-            if not conn.exists(remote_item_path):
-                conn.mkdir(remote_item_path)
+            try:
+                attr = conn.getAttributes(service_name,remote_item_path)
+            except smb.smb_structs.OperationFailure:
+                conn.createDirectory(service_name,remote_item_path)
+            # if not conn.exists(remote_item_path):
+            #     conn.mkdir(remote_item_path)
             storeDirectory(local_item_path, remote_item_path, service_name)
         elif os.path.isfile(local_item_path):
             # Copy files to the remote server
-            storeFile(conn, local_item_path, item, remote_item_path, service_name)
+            storeFile(conn, local_item_path, item, remote_path, service_name)
 
 
 def store(files_location, service_name, path_to_store, filters=[], delete=False):
