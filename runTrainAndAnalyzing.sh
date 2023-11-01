@@ -12,6 +12,9 @@ current_date=$(date +"%A%B%d%Y%H%M%S")
 containerName="/users/klavir/shared/dlcContainer${current_date}.sqsh"
 userName="${USER}"
 git clone https://github.com/KlavirLabNeuralCircutisOfBehavior/DeepLabCutWrappers.git
+cd DeepLabCutWrappers
+git pull
+cd ~
 cp /users/klavir/shared/pytorch:21.04-py3.sqsh "${containerName}"
 IFS=. read -r file_name zip <<< "${config_file_name}"
 mkdir "video_tmp_save_path${current_date}"
