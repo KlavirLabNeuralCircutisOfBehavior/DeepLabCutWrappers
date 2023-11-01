@@ -5,7 +5,7 @@ from trainDeepLabCut import train
 
 
 def main():
-    train(*sys.argv[1:5])
+    train(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[9],sys.argv[10])
     analyze(*sys.argv[5:])
     print("done full run")
 

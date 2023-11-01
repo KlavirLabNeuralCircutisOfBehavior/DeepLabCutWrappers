@@ -5,8 +5,11 @@ import zipfile
 import deeplabcut
 from smb.SMBConnection import SMBConnection
 
+import storeBySmb
 
-def train(project_smb_path, project_smb_service_name, project_zip_file_name, server_prefix):
+
+def train(project_smb_path, project_smb_service_name, project_zip_file_name, server_prefix, save_dlc_smb_service_name,
+          save_dlc_smb_server_path):
     conn = SMBConnection('LabRead',
                          'KlavirReadLab20@#',
                          '132.74.242.29',
@@ -47,7 +50,14 @@ def train(project_smb_path, project_smb_service_name, project_zip_file_name, ser
         config_path,
         plotting=False,
     )
-    print("Done evaluate")
+    print("Done evaluate, sending...")
+    try:
+        print("sending to: {}".format(server_prefix + "/" + project_zip_file_name.split(".zip")[0]))
+        storeBySmb.storeDirectory(server_prefix + "/" + project_zip_file_name.split(".zip")[0],
+                                  save_dlc_smb_server_path,
+                                  save_dlc_smb_service_name)
+    except Exception as e:
+        print("we got error when sending dlc folder to {}, error:{}".format(save_dlc_smb_server_path, e.args[1]))
 
 
 if __name__ == "__main__":
