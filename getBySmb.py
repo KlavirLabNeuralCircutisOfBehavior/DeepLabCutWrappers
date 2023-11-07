@@ -36,7 +36,7 @@ if __name__ == "__main__":
         "--filters",  # name on the CLI - drop the `--` for positional/required parameters
         nargs="*",  # 0 or more values expected => creates a list
         type=str,
-        default=[".csv", ".h5", ".mp4"],  # default if nothing is provided
+        default=[".csv", ".h5", ".mp4",".avi"],  # default if nothing is provided
     )
     CLI.add_argument("--files_download_location", type=str, default='.')
     CLI.add_argument("--service_name", type=str, default='deeplabcutfiles')
