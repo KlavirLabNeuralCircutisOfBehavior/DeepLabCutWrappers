@@ -30,7 +30,8 @@ def train(project_smb_path, project_smb_service_name, project_zip_file_name, ser
         zip_ref.extractall(server_prefix + "/")
 
     time.sleep(5)
-    config_path = server_prefix + "/" + project_zip_file_name.split(".zip")[0] + "/config.yaml"
+    base_folder = os.path.join(server_prefix, project_zip_file_name.split(".zip")[0])
+    config_path = os.path.join(base_folder, "config.yaml")
     print(config_path)
     deeplabcut.create_training_dataset(
         config_path,
@@ -51,13 +52,15 @@ def train(project_smb_path, project_smb_service_name, project_zip_file_name, ser
         plotting=False,
     )
     print("Done evaluate, sending...")
+    save_path = os.path.join(save_dlc_smb_server_path, project_zip_file_name.split(".zip")[0])
     try:
-        print("sending to: {}".format(server_prefix + "/" + project_zip_file_name.split(".zip")[0]))
-        storeBySmb.storeDirectory(server_prefix + "/" + project_zip_file_name.split(".zip")[0],
-                                  save_dlc_smb_server_path,
+        print("sending to: {}".format(base_folder))
+        conn.createDirectory(save_dlc_smb_service_name, save_path)
+        storeBySmb.storeDirectory(base_folder,
+                                  save_path,
                                   save_dlc_smb_service_name)
     except Exception as e:
-        print("we got error when sending dlc folder to {}, error:{}".format(save_dlc_smb_server_path, e.args[1]))
+        print("we got error when sending dlc folder to {}, error:{}".format(save_path, e.args[1]))
 
 
 if __name__ == "__main__":
