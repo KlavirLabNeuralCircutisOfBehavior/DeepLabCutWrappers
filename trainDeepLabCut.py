@@ -10,6 +10,10 @@ import storeBySmb
 
 def train(project_smb_path, project_smb_service_name, project_zip_file_name, server_prefix, save_dlc_smb_service_name,
           save_dlc_smb_server_path):
+    print(save_dlc_smb_service_name)
+    print(save_dlc_smb_server_path)
+    save_path = os.path.join(save_dlc_smb_server_path, project_zip_file_name.split(".zip")[0])
+    print(save_path)
     conn = SMBConnection('LabRead',
                          'KlavirReadLab20@#',
                          '132.74.242.29',
@@ -52,7 +56,6 @@ def train(project_smb_path, project_smb_service_name, project_zip_file_name, ser
         plotting=False,
     )
     print("Done evaluate, sending...")
-    save_path = os.path.join(save_dlc_smb_server_path, project_zip_file_name.split(".zip")[0])
     try:
         print("sending to: {}".format(save_path))
         conn.createDirectory(save_dlc_smb_service_name, save_path)
