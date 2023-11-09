@@ -54,13 +54,13 @@ def train(project_smb_path, project_smb_service_name, project_zip_file_name, ser
     print("Done evaluate, sending...")
     save_path = os.path.join(save_dlc_smb_server_path, project_zip_file_name.split(".zip")[0])
     try:
-        print("sending to: {}".format(base_folder))
+        print("sending to: {}".format(save_path))
         conn.createDirectory(save_dlc_smb_service_name, save_path)
         storeBySmb.storeDirectory(base_folder,
                                   save_path,
                                   save_dlc_smb_service_name)
     except Exception as e:
-        print("we got error when sending dlc folder to {}, error:{}".format(save_path, e.args[1]))
+        print("we got error when sending dlc folder to {}, error:{}".format(save_path, e))
 
 
 if __name__ == "__main__":
