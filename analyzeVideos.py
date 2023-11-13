@@ -26,12 +26,15 @@ def analyze(config_path, video_paths_smb, video_tmp_save_path, results_paths_smb
                                  'WORKGROUP',
                                  use_ntlm_v2=True)
             assert conn.connect('132.74.242.29', port=445)
-            tmp_video_path = [os.path.join(video_tmp_save_path, file.filename)]
+            tmp_video_folder_path = os.path.join(video_tmp_save_path, os.path.basename(file.filename))
+            if not os.path.exists(tmp_video_folder_path):
+                os.mkdir(tmp_video_folder_path)
+            tmp_video_path = [os.path.join(tmp_video_folder_path, file.filename)]
             with open(tmp_video_path[0], 'wb') as video_file:
                 conn.retrieveFile(service_name_video_path, video_paths_smb + "/" + file.filename, video_file,
                                   timeout=60 * 60,
                                   show_progress=True)
-            print("done downloading" + file.filename)
+            print("done downloading {}".format(file.filename))
             conn.close()
             deeplabcut.analyze_videos(
                 config_path,
@@ -49,8 +52,11 @@ def analyze(config_path, video_paths_smb, video_tmp_save_path, results_paths_smb
                 tmp_video_path,
                 keypoints_only=False
             )
-    print("sending results to smb server")
-    store(video_tmp_save_path, service_name_result_path, results_paths_smb, [".csv", ".h5", "labeled.mp4"], True)
+            print("sending {} results to smb server".format(os.path.basename(file.filename)))
+            store(tmp_video_folder_path, service_name_result_path, results_paths_smb, [".csv", ".h5", "labeled"],
+                  True)
+
+    # store(video_tmp_save_path, service_name_result_path, results_paths_smb, [".csv", ".h5", "labeled.mp4"], True)
     print("done!")
 
 
