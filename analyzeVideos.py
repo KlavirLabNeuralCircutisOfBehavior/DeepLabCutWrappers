@@ -29,6 +29,7 @@ def analyze(config_path, video_paths_smb, video_tmp_save_path, results_paths_smb
             tmp_video_folder_path = os.path.join(video_tmp_save_path, os.path.basename(file.filename))
             if not os.path.exists(tmp_video_folder_path):
                 os.mkdir(tmp_video_folder_path)
+                conn.close()
                 continue
             tmp_video_path = [os.path.join(tmp_video_folder_path, file.filename)]
             with open(tmp_video_path[0], 'wb') as video_file:
