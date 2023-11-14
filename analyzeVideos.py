@@ -56,7 +56,7 @@ def analyze(config_path, video_paths_smb, video_tmp_save_path, results_paths_smb
                 keypoints_only=False
             )
             print("sending {} results to smb server".format(os.path.basename(file.filename)))
-            store(tmp_video_folder_path, service_name_result_path, results_paths_smb, [".csv", ".h5", "labeled"],
+            store(tmp_video_folder_path, service_name_result_path, results_paths_smb, None,
                   True)
 
     # store(video_tmp_save_path, service_name_result_path, results_paths_smb, [".csv", ".h5", "labeled.mp4"], True)
